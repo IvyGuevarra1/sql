@@ -98,7 +98,7 @@ HINT: This is two total queries -- first create the table from the original, the
 When inserting the new vendor, you need to appropriately align the columns to be inserted 
 (there are five columns to be inserted, I've given you the details, but not the syntax) 
 
--> To insert the new row use VALUES, specifying the value you want for each column:
+-> To insert the new row use VALUES, specifying the value you want for eac h column:
 VALUES(col1,col2,col3,col4,col5) 
 */
 
