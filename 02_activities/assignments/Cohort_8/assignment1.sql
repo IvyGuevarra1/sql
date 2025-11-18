@@ -93,18 +93,17 @@ of customers for them to give stickers to, sorted by last name, then first name.
 
 HINT: This query requires you to join two tables, use an aggregate function, and use the HAVING keyword. */
 
-SELECT *
---Sum (customer_purchases.quantity * customer_purchases.cost_to_customer_per_qty) as total_amount
-FROM customer
-INNER JOIN customer_purchases
-ON customer.customer_id = customer_purchases.customer_id
-
-GROUP BY customer_id 
-
-
-Having total_amount >= $2000
-ORDER BY customer_last_name, customer_first_name ASC
-
+SELECT x.customer_first_name, x.customer_last_name,-- selecting only 
+    SUM(xy.quantity * xy.cost_to_customer_per_qty) AS spent_total
+FROM customer x
+INNER JOIN customer_purchases xy ON x.customer_id = xy.customer_id
+GROUP BY
+    x.customer_id, x.customer_first_name, x.customer_last_name
+HAVING
+    SUM(xy.quantity * xy.cost_to_customer_per_qty) > 2000
+ORDER BY
+    x.customer_last_name ASC,
+    x.customer_first_name ASC;
 
 
 
