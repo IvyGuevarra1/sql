@@ -2,10 +2,6 @@
 /* SECTION 2 */
 
 
-
-
-
-
 --SELECT
 /* 1. Write a query that returns everything in the customer table. */
 
@@ -124,7 +120,7 @@ Select *
 From vendor;
 
 INSERT INTO temp.new_vendor
-VALUES (10, 'Thomass Superfood Store', 'Fresh Focused', 'Thomas', 'Rosenthal')--I can see new_vendor in the temp table but i cannot see it in the browse data :(
+VALUES (10, 'Thomass Superfood Store', 'Fresh Focused', 'Thomas', 'Rosenthal')--I can see new_vendor in the temp table but i cannot see it in the browse data :( end of my answers
 
 
 -- Date
