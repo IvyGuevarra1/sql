@@ -15,7 +15,7 @@ SELECT * From customer
 /* 2. Write a query that displays all of the columns and 10 rows from the customer table, 
 sorted by customer_last_name, then customer_first_ name. */
 SELECT * FROM customer
-ORDER BY customer_last_name -- there is no need to add the customer first name because the first name goes with the last name
+ORDER BY customer_last_name,customer_first_name 
 LIMIT 10; 
 
 
@@ -79,7 +79,12 @@ INNER JOIN vendor_booth_assignments
 -- AGGREGATE
 /* 1. Write a query that determines how many times each vendor has rented a booth 
 at the farmer’s market by counting the vendor booth assignments per vendor_id. */
-
+SELECT vendor_id,
+	Count(*) AS rentals
+FROM vendor_booth_assignments
+Group BY vendor_id
+Order by 
+vendor_id ASC, rentals ASC;
 
 
 /* 2. The Farmer’s Market Customer Appreciation Committee wants to give a bumper 
@@ -87,6 +92,21 @@ sticker to everyone who has ever spent more than $2000 at the market. Write a qu
 of customers for them to give stickers to, sorted by last name, then first name. 
 
 HINT: This query requires you to join two tables, use an aggregate function, and use the HAVING keyword. */
+
+SELECT *
+--Sum (customer_purchases.quantity * customer_purchases.cost_to_customer_per_qty) as total_amount
+FROM customer
+INNER JOIN customer_purchases
+ON customer.customer_id = customer_purchases.customer_id
+
+GROUP BY customer_id 
+
+
+Having total_amount >= $2000
+ORDER BY customer_last_name, customer_first_name ASC
+
+
+
 
 
 
