@@ -2,10 +2,6 @@
 /* SECTION 2 */
 
 
-
-
-
-
 --SELECT
 /* 1. Write a query that returns everything in the customer table. */
 
@@ -15,7 +11,7 @@ SELECT * From customer
 /* 2. Write a query that displays all of the columns and 10 rows from the customer table, 
 sorted by customer_last_name, then customer_first_ name. */
 SELECT * FROM customer
-ORDER BY customer_last_name -- there is no need to add the customer first name because the first name goes with the last name
+ORDER BY customer_last_name,customer_first_name 
 LIMIT 10; 
 
 
@@ -45,7 +41,7 @@ WHERE customer_id BETWEEN '8' AND '10';
 /* 1. Products can be sold by the individual unit or by bulk measures like lbs. or oz. 
 Using the product table, write a query that outputs the product_id and product_name
 columns and add a column called prod_qty_type_condensed that displays the word “unit” 
-if the product_qty_type is “unit,” and otherwise displays the word “bulk.” */
+if the product_qty_type is “unit,” and otherwise displays the word “bulk” */
 SELECT product_id, product_name,
 CASE WHEN product_qty_type = 'unit' THEN 'unit'
 	ELSE 'bulk'
@@ -64,13 +60,12 @@ FROM product;
 --JOIN
 /* 1. Write a query that INNER JOINs the vendor table to the vendor_booth_assignments table on the 
 vendor_id field they both have in common, and sorts the result by vendor_name, then market_date. */
-SELECT
-vendor_name ASC,
+SELECT vendor_name ASC,
 market_date,
 vendor.vendor_id
 
 FROM vendor 
-INNER JOIN vendor_booth_assignments
+	INNER JOIN vendor_booth_assignments
 	ON vendor.vendor_id = vendor_booth_assignments.vendor_id
 
 
@@ -79,7 +74,12 @@ INNER JOIN vendor_booth_assignments
 -- AGGREGATE
 /* 1. Write a query that determines how many times each vendor has rented a booth 
 at the farmer’s market by counting the vendor booth assignments per vendor_id. */
-
+SELECT vendor_id,
+	Count(*) AS rentals
+FROM vendor_booth_assignments
+	Group BY vendor_id
+	Order by 
+	vendor_id ASC, rentals ASC;
 
 
 /* 2. The Farmer’s Market Customer Appreciation Committee wants to give a bumper 
@@ -87,6 +87,18 @@ sticker to everyone who has ever spent more than $2000 at the market. Write a qu
 of customers for them to give stickers to, sorted by last name, then first name. 
 
 HINT: This query requires you to join two tables, use an aggregate function, and use the HAVING keyword. */
+
+SELECT x.customer_first_name, x.customer_last_name,-- select names
+	SUM(xy.quantity * xy.cost_to_customer_per_qty) AS spent_total-- total all the amount spent
+FROM customer x
+	INNER JOIN customer_purchases xy 
+	ON x.customer_id = xy.customer_id-- the 2 tables are joined using pm
+	GROUP BY x.customer_id, x.customer_first_name, x.customer_last_name --grouping the customers 
+	HAVING
+	spent_total > 2000 -- list only those with >2000
+		ORDER BY x.customer_last_name ASC,x.customer_first_name ASC;
+
+
 
 
 
@@ -98,10 +110,17 @@ HINT: This is two total queries -- first create the table from the original, the
 When inserting the new vendor, you need to appropriately align the columns to be inserted 
 (there are five columns to be inserted, I've given you the details, but not the syntax) 
 
--> To insert the new row use VALUES, specifying the value you want for each column:
+-> To insert the new row use VALUES, specifying the value you want for eac h column:
 VALUES(col1,col2,col3,col4,col5) 
 */
+DROP TABLE IF EXISTS temp.new_vendor;
+CREATE TABLE temp.new_vendor as 
+Select *
 
+From vendor;
+
+INSERT INTO temp.new_vendor
+VALUES (10, 'Thomass Superfood Store', 'Fresh Focused', 'Thomas', 'Rosenthal')--I can see new_vendor in the temp table but i cannot see it in the browse data :( end of my answers
 
 
 -- Date
