@@ -64,13 +64,12 @@ FROM product;
 --JOIN
 /* 1. Write a query that INNER JOINs the vendor table to the vendor_booth_assignments table on the 
 vendor_id field they both have in common, and sorts the result by vendor_name, then market_date. */
-SELECT
-vendor_name ASC,
+SELECT vendor_name ASC,
 market_date,
 vendor.vendor_id
 
 FROM vendor 
-INNER JOIN vendor_booth_assignments
+	INNER JOIN vendor_booth_assignments
 	ON vendor.vendor_id = vendor_booth_assignments.vendor_id
 
 
@@ -82,9 +81,9 @@ at the farmer’s market by counting the vendor booth assignments per vendor_id.
 SELECT vendor_id,
 	Count(*) AS rentals
 FROM vendor_booth_assignments
-Group BY vendor_id
-Order by 
-vendor_id ASC, rentals ASC;
+	Group BY vendor_id
+	Order by 
+	vendor_id ASC, rentals ASC;
 
 
 /* 2. The Farmer’s Market Customer Appreciation Committee wants to give a bumper 
@@ -93,17 +92,15 @@ of customers for them to give stickers to, sorted by last name, then first name.
 
 HINT: This query requires you to join two tables, use an aggregate function, and use the HAVING keyword. */
 
-SELECT x.customer_first_name, x.customer_last_name,-- selecting only 
-    SUM(xy.quantity * xy.cost_to_customer_per_qty) AS spent_total
+SELECT x.customer_first_name, x.customer_last_name,-- select names
+	SUM(xy.quantity * xy.cost_to_customer_per_qty) AS spent_total-- total all the amount spent
 FROM customer x
-INNER JOIN customer_purchases xy ON x.customer_id = xy.customer_id
-GROUP BY
-    x.customer_id, x.customer_first_name, x.customer_last_name
-HAVING
-    SUM(xy.quantity * xy.cost_to_customer_per_qty) > 2000
-ORDER BY
-    x.customer_last_name ASC,
-    x.customer_first_name ASC;
+	INNER JOIN customer_purchases xy 
+	ON x.customer_id = xy.customer_id-- the 2 tables are joined using pm
+	GROUP BY x.customer_id, x.customer_first_name, x.customer_last_name --grouping the customers 
+	HAVING
+	spent_total > 2000 -- list only those with >2000
+		ORDER BY x.customer_last_name ASC,x.customer_first_name ASC;
 
 
 
@@ -120,7 +117,14 @@ When inserting the new vendor, you need to appropriately align the columns to be
 -> To insert the new row use VALUES, specifying the value you want for eac h column:
 VALUES(col1,col2,col3,col4,col5) 
 */
+DROP TABLE IF EXISTS temp.new_vendor;
+CREATE TABLE temp.new_vendor as 
+Select *
 
+From vendor;
+
+INSERT INTO temp.new_vendor
+VALUES (10, 'Thomass Superfood Store', 'Fresh Focused', 'Thomas', 'Rosenthal')--I can see new_vendor in the temp table but i cannot see it in the browse data :(
 
 
 -- Date
