@@ -5,7 +5,7 @@
 /* 1. Our favourite manager wants a detailed long list of products, but is afraid of tables! 
 We tell them, no problem! We can produce a list with all of the appropriate details. 
 
-Using the following syntax you create our super cool and not at all needy manager a list:
+Using the following syntax you create our super cool and not at all needy manager a list:--
 
 SELECT 
 product_name || ', ' || product_size|| ' (' || product_qty_type || ')'
@@ -14,6 +14,12 @@ FROM product
 But wait! The product table has some bad data (a few NULL values). 
 Find the NULLs and then using COALESCE, replace the NULL with a 
 blank for the first problem, and 'unit' for the second problem. 
+
+SELECT 
+    product_name || ', ' || COALESCE(product_size, '') || ' (' || COALESCE(product_qty_type, 'unit') || ')' --coalesce will return blank for prod size, and unit if null in qty type
+FROM product;
+
+
 
 HINT: keep the syntax the same, but edited the correct components with the string. 
 The `||` values concatenate the columns into strings. 
@@ -32,6 +38,11 @@ each new market date for each customer, or select only the unique market dates p
 (without purchase details) and number those visits. 
 HINT: One of these approaches uses ROW_NUMBER() and one uses DENSE_RANK(). */
 
+SELECT customer_id,market_date,
+ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY market_date) AS number_of_visit -- I use ROW_NUMBER to show visits
+FROM (SELECT DISTINCT customer_id, market_date  -- select only in a subsetwhen there is a customer and date combinations
+FROM customer_purchases) AS distinct_visits 
+ORDER BY customer_id, market_date;
 
 
 /* 2. Reverse the numbering of the query from a part so each customer’s most recent visit is labeled 1, 
