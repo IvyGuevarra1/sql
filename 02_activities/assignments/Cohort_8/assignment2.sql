@@ -49,12 +49,20 @@ ORDER BY customer_id, market_date;
 then write another query that uses this one as a subquery (or temp table) and filters the results to 
 only the customer’s most recent visit. */
 
+SELECT customer_id, market_date,
+ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY market_date DESC ) AS number_of_visit 
+FROM ( SELECT DISTINCT customer_id, market_date
+        FROM customer_purchases ) AS distinct_visits
+ORDER BY customer_id, market_date DESC; -- Ordering the final output by most recent date first 
 
 
 /* 3. Using a COUNT() window function, include a value along with each row of the 
 customer_purchases table that indicates how many different times that customer has purchased that product_id. */
 
-
+SELECT customer_id,market_date,product_id,
+COUNT(*) OVER ( PARTITION BY customer_id, product_id) AS product_purchase_count
+FROM customer_purchases
+ORDER BY customer_id, market_date DESC;
 
 -- String manipulations
 /* 1. Some product names in the product table have descriptions like "Jar" or "Organic". 
@@ -68,13 +76,30 @@ Remove any trailing or leading whitespaces. Don't just use a case statement for 
 
 Hint: you might need to use INSTR(product_name,'-') to find the hyphens. INSTR will help split the column. */
 
+SELECT product_name,
+    CASE -- is there "-" ?
+        WHEN INSTR(product_name, '-') > 0 THEN
+            TRIM(
+                SUBSTR(
+                    product_name, --if there is find the description
+                    INSTR(product_name, '-') + 1 -- make sure "-" is not included 
+                )
+            )
+        ELSE -- no, there is no "-"
+            NULL
+    END AS description
+FROM product 
 
 
 /* 2. Filter the query to show any product_size value that contain a number with REGEXP. */
 
+SELECT product_name, product_size -- the numbers are found in product_name
+FROM
+    product
+WHERE
+    product_size REGEXP '[0-9]'; -- finds any number bet 0-9
 
-
--- UNION
+-- UNION 
 /* 1. Using a UNION, write a query that displays the market dates with the highest and lowest total sales.
 
 HINT: There are a possibly a few ways to do this query, but if you're struggling, try the following: 
