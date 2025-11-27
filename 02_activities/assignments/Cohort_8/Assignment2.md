@@ -46,7 +46,7 @@ There are several tools online you can use, I'd recommend [Draw.io](https://www.
 **HINT:** You do not need to create any data for this prompt. This is a logical model (ERD) only. 
 
 #### Prompt 2
-We want to create employee shifts, splitting up the day into morning and evening. Add this to the ERD.
+We want to create employee shifts, splitting up the day into morning and evening. Add this to the ERD. 
 
 #### Prompt 3
 The store wants to keep customer addresses. Propose two architectures for the CUSTOMER_ADDRESS table, one that will retain changes, and another that will overwrite. Which is type 1, which is type 2? 
@@ -54,7 +54,9 @@ The store wants to keep customer addresses. Propose two architectures for the CU
 **HINT:** search type 1 vs type 2 slowly changing dimensions. 
 
 ```
-Your answer...
+From my research about slowly changing dimensions, to overwrite the address of the customer, I can design it using it SCD Type 1. With this architecture, only the current address is maintained. Once the new address is added, it will overwrite the value of the address and the old one is gone. I will use the Customer_ID as the primary key for this. 
+
+SCD Type 2 will allow the old address to be retain preserving the history of all changing addresses. When the address is changed, a new record is inserted,  and the old record is flagged as inactive using Start_Date, End_Date, and an Is_Current flag. With this option, the old address could still be tied to the old purchases that are valid at that time. 
 ```
 
 ***
